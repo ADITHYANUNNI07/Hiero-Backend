@@ -29,6 +29,8 @@ func (js *JobSeekerServer) JobSeekerSignup(ctx context.Context, req *pb.JobSeeke
 		PhoneNumber: req.PhoneNumber,
 		DateOfBirth: req.DateOfBirth,
 		Gender:      req.Gender,
+		Address:     req.Address,
+		Bio:         req.Bio,
 	}
 
 	fmt.Println("service", jobSeekerSignup)
@@ -46,6 +48,8 @@ func (js *JobSeekerServer) JobSeekerSignup(ctx context.Context, req *pb.JobSeeke
 		PhoneNumber: res.JobSeeker.PhoneNumber,
 		DateOfBirth: res.JobSeeker.DateOfBirth,
 		Gender:      res.JobSeeker.Gender,
+		Address:     res.JobSeeker.Address,
+		Bio:         res.JobSeeker.Bio,
 	}
 
 	return &pb.JobSeekerSignupResponse{
@@ -74,6 +78,8 @@ func (js *JobSeekerServer) JobSeekerLogin(ctx context.Context, req *pb.JobSeeker
 		PhoneNumber: jobSeeker.JobSeeker.PhoneNumber,
 		DateOfBirth: jobSeeker.JobSeeker.DateOfBirth,
 		Gender:      jobSeeker.JobSeeker.Gender,
+		Address:     jobSeeker.JobSeeker.Address,
+		Bio:         jobSeeker.JobSeeker.Bio,
 	}
 
 	return &pb.JobSeekerLoginResponse{

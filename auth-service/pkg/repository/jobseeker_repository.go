@@ -26,7 +26,7 @@ func (jr *jobSeekerRepository) JobSeekerSignUp(jobSeekerDetails models.JobSeeker
 	fmt.Println("email", model.Email)
 
 	fmt.Println("models", model)
-	if err := jr.DB.Raw("INSERT INTO job_seekers (email, password, first_name, last_name, phone_number, date_of_birth, gender) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, email, first_name, last_name, phone_number, date_of_birth, gender", jobSeekerDetails.Email, jobSeekerDetails.Password, jobSeekerDetails.FirstName, jobSeekerDetails.LastName, jobSeekerDetails.PhoneNumber, jobSeekerDetails.DateOfBirth, jobSeekerDetails.Gender).Scan(&model).Error; err != nil {
+	if err := jr.DB.Raw("INSERT INTO job_seekers (email, password, first_name, last_name, phone_number, date_of_birth, gender, address, bio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id, email, first_name, last_name, phone_number, date_of_birth, gender, address, bio", jobSeekerDetails.Email, jobSeekerDetails.Password, jobSeekerDetails.FirstName, jobSeekerDetails.LastName, jobSeekerDetails.PhoneNumber, jobSeekerDetails.DateOfBirth, jobSeekerDetails.Gender, jobSeekerDetails.Address, jobSeekerDetails.Bio).Scan(&model).Error; err != nil {
 		return models.JobSeekerDetailsResponse{}, err
 	}
 	fmt.Println("inside", model.Email)

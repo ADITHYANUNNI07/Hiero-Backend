@@ -54,6 +54,8 @@ func (jc *jobSeekerClient) JobSeekerSignUp(jobSeekerDetails models.JobSeekerSign
 		PhoneNumber: jobSeekerDetails.PhoneNumber,
 		DateOfBirth: jobSeekerDetails.DateOfBirth,
 		Gender:      jobSeekerDetails.Gender,
+		Address:     jobSeekerDetails.Address,
+		Bio:         jobSeekerDetails.Bio,
 	})
 	if err != nil {
 		return models.TokenJobSeeker{}, err
@@ -67,6 +69,8 @@ func (jc *jobSeekerClient) JobSeekerSignUp(jobSeekerDetails models.JobSeekerSign
 			PhoneNumber: jobSeeker.JobSeekerDetails.PhoneNumber,
 			DateOfBirth: jobSeeker.JobSeekerDetails.DateOfBirth,
 			Gender:      jobSeeker.JobSeekerDetails.Gender,
+			Address:     jobSeeker.JobSeekerDetails.Address,
+			Bio:         jobSeeker.JobSeekerDetails.Bio,
 		},
 		Token: jobSeeker.Token,
 	}, nil

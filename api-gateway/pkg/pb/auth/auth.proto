@@ -179,6 +179,8 @@ message JobSeekerSignupRequest {
     string phone_number = 5;
     string date_of_birth = 6;
     string gender = 7;
+    string address = 8;
+    string bio = 9;
 }
 
 message JobSeekerSignupResponse {
@@ -195,6 +197,8 @@ message JobSeekerDetails {
     string phone_number = 5;
     string date_of_birth = 6;
     string gender = 7;
+    string address = 8;
+    string bio = 9;
 }
 
 message JobSeekerLoginRequest {

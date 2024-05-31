@@ -14,6 +14,8 @@ type JobSeekerSignUp struct {
 	PhoneNumber string `json:"phone_number"`
 	DateOfBirth string `json:"date_of_birth"`
 	Gender      string `json:"gender"`
+	Address     string `json:"address"`
+	Bio         string `json:"bio"`
 }
 
 type JobSeekerDetailsResponse struct {
@@ -24,6 +26,8 @@ type JobSeekerDetailsResponse struct {
 	PhoneNumber string `json:"phone_number"`
 	DateOfBirth string `json:"date_of_birth"`
 	Gender      string `json:"gender"`
+	Address     string `json:"address"`
+	Bio         string `json:"bio"`
 }
 
 type TokenJobSeeker struct {

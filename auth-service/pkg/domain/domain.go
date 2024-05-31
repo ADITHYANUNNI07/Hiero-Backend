@@ -41,6 +41,8 @@ type JobSeeker struct {
 	Phone_number  string `json:"phone_number" gorm:"validate:required"`
 	Date_of_birth string `json:"date_of_birth" gorm:"validate:required"`
 	Gender        string `json:"gender" gorm:"validate:required"`
+	Address       string `json:"address"`
+	Bio           string `json:"bio"`
 	Created_at    string `json:"created_at"`
 	Updated_at    string `json:"updated_at"`
 	Deleted_at    string `json:"deleted_at"`
