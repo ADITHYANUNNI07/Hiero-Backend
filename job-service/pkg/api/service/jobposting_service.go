@@ -25,13 +25,14 @@ func NewJobServer(useCase interfaces.JobUseCase) pb.JobServer {
 		jobUseCase: useCase,
 	}
 }
-func (js *JobServer) PostJob(ctx context.Context, req *pb.JobOpeningRequest) (*pb.JobOpeningResponse, error) {
 
+func (js *JobServer) PostJob(ctx context.Context, req *pb.JobOpeningRequest) (*pb.JobOpeningResponse, error) {
 	employerID := int32(req.EmployerId)
 
 	jobDetails := models.JobOpening{
 		Title:               req.Title,
 		Description:         req.Description,
+		Type:                req.Type,
 		Requirements:        req.Requirements,
 		Location:            req.Location,
 		EmploymentType:      req.EmploymentType,
@@ -40,6 +41,10 @@ func (js *JobServer) PostJob(ctx context.Context, req *pb.JobOpeningRequest) (*p
 		ExperienceLevel:     req.ExperienceLevel,
 		EducationLevel:      req.EducationLevel,
 		ApplicationDeadline: req.ApplicationDeadline.AsTime(),
+		StartingDate:        req.StartingDate.AsTime(),
+		CompanyName:         req.CompanyName,
+		YearOfExperience:    req.YearOfExperience,
+		Opportunities:       req.Opportunities,
 	}
 
 	fmt.Println("service", jobDetails)
@@ -53,6 +58,7 @@ func (js *JobServer) PostJob(ctx context.Context, req *pb.JobOpeningRequest) (*p
 		Id:                  uint64(res.ID),
 		Title:               res.Title,
 		Description:         res.Description,
+		Type:                res.Type,
 		Requirements:        res.Requirements,
 		PostedOn:            timestamppb.New(res.PostedOn),
 		Location:            res.Location,
@@ -62,7 +68,12 @@ func (js *JobServer) PostJob(ctx context.Context, req *pb.JobOpeningRequest) (*p
 		ExperienceLevel:     res.ExperienceLevel,
 		EducationLevel:      res.EducationLevel,
 		ApplicationDeadline: timestamppb.New(res.ApplicationDeadline),
-		EmployerId:          int32(req.EmployerId), // Set the EmployerId field
+		EmployerId:          employerID,
+		StartingDate:        timestamppb.New(res.StartingDate),
+		CompanyName:         res.CompanyName,
+		YearOfExperience:    res.YearOfExperience,
+		Opportunities:       res.Opportunities,
+		CandidatesHired:     res.CandidatesHired,
 	}
 
 	return jobOpening, nil
@@ -131,7 +142,7 @@ func (js *JobServer) DeleteAJob(ctx context.Context, req *pb.DeleteAJobRequest) 
 }
 
 func (js *JobServer) UpdateAJob(ctx context.Context, req *pb.UpdateAJobRequest) (*pb.UpdateAJobResponse, error) {
-	employerID := req.EmployerIDInt
+	employerID := req.EmployerId
 	jobID := req.JobId
 
 	jobDetails := models.JobOpening{
@@ -145,11 +156,15 @@ func (js *JobServer) UpdateAJob(ctx context.Context, req *pb.UpdateAJobRequest) 
 		ExperienceLevel:     req.ExperienceLevel,
 		EducationLevel:      req.EducationLevel,
 		ApplicationDeadline: req.ApplicationDeadline.AsTime(),
+		StartingDate:        req.StartingDate.AsTime(),
+		CompanyName:         req.CompanyName,
+		YearOfExperience:    req.YearOfExperience,
+		Opportunities:       req.Opportunities,
 	}
 
 	fmt.Println("service", jobDetails)
 
-	res, err := js.jobUseCase.UpdateAJob(employerID, jobID, jobDetails)
+	res, err := js.jobUseCase.UpdateAJob(int32(employerID), int32(jobID), jobDetails)
 	if err != nil {
 		return nil, err
 	}
@@ -198,9 +213,9 @@ func (js *JobServer) JobSeekerGetAllJobs(ctx context.Context, req *pb.JobSeekerG
 }
 
 func (js *JobServer) GetJobDetails(ctx context.Context, req *pb.GetJobDetailsRequest) (*pb.GetJobDetailsResponse, error) {
-	jobId := req.JobId
+	jobID := req.JobId
 
-	res, err := js.jobUseCase.GetJobDetails(jobId)
+	res, err := js.jobUseCase.GetJobDetails(jobID)
 	if err != nil {
 		return nil, err
 	}
@@ -208,6 +223,7 @@ func (js *JobServer) GetJobDetails(ctx context.Context, req *pb.GetJobDetailsReq
 	jobDetailsResponse := &pb.GetJobDetailsResponse{
 		Title:               res.Title,
 		Description:         res.Description,
+		Type:                res.Type,
 		Requirements:        res.Requirements,
 		EmployerId:          int32(res.EmployerID),
 		Location:            res.Location,
@@ -217,6 +233,12 @@ func (js *JobServer) GetJobDetails(ctx context.Context, req *pb.GetJobDetailsReq
 		ExperienceLevel:     res.ExperienceLevel,
 		EducationLevel:      res.EducationLevel,
 		ApplicationDeadline: timestamppb.New(res.ApplicationDeadline),
+		PostedOn:            timestamppb.New(res.PostedOn),
+		StartingDate:        timestamppb.New(res.StartingDate),
+		CompanyName:         res.CompanyName,
+		YearOfExperience:    res.YearOfExperience,
+		Opportunities:       res.Opportunities,
+		CandidatesHired:     res.CandidatesHired,
 	}
 
 	return jobDetailsResponse, nil

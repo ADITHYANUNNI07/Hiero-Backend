@@ -34,6 +34,7 @@ const (
 	Job_GetSavedJobs_FullMethodName        = "/job.Job/GetSavedJobs"
 	Job_ScheduleInterview_FullMethodName   = "/job.Job/ScheduleInterview"
 	Job_GetInterview_FullMethodName        = "/job.Job/GetInterview"
+	Job_GetAnApplicant_FullMethodName      = "/job.Job/GetAnApplicant"
 )
 
 // JobClient is the client API for Job service.
@@ -54,6 +55,7 @@ type JobClient interface {
 	GetSavedJobs(ctx context.Context, in *GetSavedJobsRequest, opts ...grpc.CallOption) (*GetSavedJobsResponse, error)
 	ScheduleInterview(ctx context.Context, in *ScheduleInterviewRequest, opts ...grpc.CallOption) (*ScheduleInterviewResponse, error)
 	GetInterview(ctx context.Context, in *GetInterviewRequest, opts ...grpc.CallOption) (*GetInterviewsResponse, error)
+	GetAnApplicant(ctx context.Context, in *GetAnApplicantRequest, opts ...grpc.CallOption) (*GetAnApplicantResponse, error)
 }
 
 type jobClient struct {
@@ -190,6 +192,15 @@ func (c *jobClient) GetInterview(ctx context.Context, in *GetInterviewRequest, o
 	return out, nil
 }
 
+func (c *jobClient) GetAnApplicant(ctx context.Context, in *GetAnApplicantRequest, opts ...grpc.CallOption) (*GetAnApplicantResponse, error) {
+	out := new(GetAnApplicantResponse)
+	err := c.cc.Invoke(ctx, Job_GetAnApplicant_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JobServer is the server API for Job service.
 // All implementations must embed UnimplementedJobServer
 // for forward compatibility
@@ -208,6 +219,7 @@ type JobServer interface {
 	GetSavedJobs(context.Context, *GetSavedJobsRequest) (*GetSavedJobsResponse, error)
 	ScheduleInterview(context.Context, *ScheduleInterviewRequest) (*ScheduleInterviewResponse, error)
 	GetInterview(context.Context, *GetInterviewRequest) (*GetInterviewsResponse, error)
+	GetAnApplicant(context.Context, *GetAnApplicantRequest) (*GetAnApplicantResponse, error)
 	mustEmbedUnimplementedJobServer()
 }
 
@@ -256,6 +268,9 @@ func (UnimplementedJobServer) ScheduleInterview(context.Context, *ScheduleInterv
 }
 func (UnimplementedJobServer) GetInterview(context.Context, *GetInterviewRequest) (*GetInterviewsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInterview not implemented")
+}
+func (UnimplementedJobServer) GetAnApplicant(context.Context, *GetAnApplicantRequest) (*GetAnApplicantResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAnApplicant not implemented")
 }
 func (UnimplementedJobServer) mustEmbedUnimplementedJobServer() {}
 
@@ -522,6 +537,24 @@ func _Job_GetInterview_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Job_GetAnApplicant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAnApplicantRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).GetAnApplicant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Job_GetAnApplicant_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).GetAnApplicant(ctx, req.(*GetAnApplicantRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Job_ServiceDesc is the grpc.ServiceDesc for Job service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -584,6 +617,10 @@ var Job_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetInterview",
 			Handler:    _Job_GetInterview_Handler,
+		},
+		{
+			MethodName: "GetAnApplicant",
+			Handler:    _Job_GetAnApplicant_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

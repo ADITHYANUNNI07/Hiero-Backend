@@ -32,13 +32,16 @@ func NewJobClient(cfg config.Config) interfaces.JobClient {
 		Client: grpcClient,
 	}
 }
+
 func (jc *jobClient) PostJobOpening(jobDetails models.JobOpening, EmployerID int32) (models.JobOpeningResponse, error) {
 
 	applicationDeadline := timestamppb.New(jobDetails.ApplicationDeadline)
+	startingDate := timestamppb.New(jobDetails.StartingDate)
 
 	job, err := jc.Client.PostJob(context.Background(), &pb.JobOpeningRequest{
 		Title:               jobDetails.Title,
 		Description:         jobDetails.Description,
+		Type:                jobDetails.Type,
 		Requirements:        jobDetails.Requirements,
 		Location:            jobDetails.Location,
 		EmploymentType:      jobDetails.EmploymentType,
@@ -47,6 +50,10 @@ func (jc *jobClient) PostJobOpening(jobDetails models.JobOpening, EmployerID int
 		ExperienceLevel:     jobDetails.ExperienceLevel,
 		EducationLevel:      jobDetails.EducationLevel,
 		ApplicationDeadline: applicationDeadline,
+		CompanyName:         jobDetails.CompanyName,
+		YearOfExperience:    jobDetails.YearOfExperience,
+		Opportunities:       jobDetails.Opportunities,
+		StartingDate:        startingDate,
 		EmployerId:          EmployerID,
 	})
 	if err != nil {
@@ -55,11 +62,13 @@ func (jc *jobClient) PostJobOpening(jobDetails models.JobOpening, EmployerID int
 
 	postedOnTime := job.PostedOn.AsTime()
 	applicationDeadlineTime := job.ApplicationDeadline.AsTime()
+	startingDateTime := job.StartingDate.AsTime()
 
 	return models.JobOpeningResponse{
 		ID:                  uint(job.Id),
 		Title:               job.Title,
 		Description:         job.Description,
+		Type:                job.Type,
 		Requirements:        job.Requirements,
 		PostedOn:            postedOnTime,
 		Location:            job.Location,
@@ -69,7 +78,11 @@ func (jc *jobClient) PostJobOpening(jobDetails models.JobOpening, EmployerID int
 		ExperienceLevel:     job.ExperienceLevel,
 		EducationLevel:      job.EducationLevel,
 		ApplicationDeadline: applicationDeadlineTime,
-		EmployerID:          EmployerID, // Uncomment this line if you need to set EmployerID
+		CompanyName:         job.CompanyName,
+		YearOfExperience:    job.YearOfExperience,
+		Opportunities:       job.Opportunities,
+		StartingDate:        startingDateTime,
+		EmployerID:          EmployerID,
 	}, nil
 }
 
@@ -133,10 +146,12 @@ func (jc *jobClient) DeleteAJob(employerIDInt, jobID int32) error {
 func (jc *jobClient) UpdateAJob(employerIDInt int32, jobID int32, jobDetails models.JobOpening) (models.JobOpeningResponse, error) {
 
 	applicationDeadline := timestamppb.New(jobDetails.ApplicationDeadline)
+	startingDate := timestamppb.New(jobDetails.StartingDate)
 
 	job, err := jc.Client.UpdateAJob(context.Background(), &pb.UpdateAJobRequest{
 		Title:               jobDetails.Title,
 		Description:         jobDetails.Description,
+		Type:                jobDetails.Type,
 		Requirements:        jobDetails.Requirements,
 		Location:            jobDetails.Location,
 		EmploymentType:      jobDetails.EmploymentType,
@@ -145,20 +160,26 @@ func (jc *jobClient) UpdateAJob(employerIDInt int32, jobID int32, jobDetails mod
 		ExperienceLevel:     jobDetails.ExperienceLevel,
 		EducationLevel:      jobDetails.EducationLevel,
 		ApplicationDeadline: applicationDeadline,
-		EmployerId:          employerIDInt,
-		JobId:               jobID,
+		//CompanyName:         jobDetails.CompanyName,
+		YearOfExperience: jobDetails.YearOfExperience,
+		Opportunities:    jobDetails.Opportunities,
+		StartingDate:     startingDate,
+		EmployerId:       employerIDInt,
+		JobId:            jobID,
 	})
 	if err != nil {
-		return models.JobOpeningResponse{}, fmt.Errorf("failed to post job opening: %v", err)
+		return models.JobOpeningResponse{}, fmt.Errorf("failed to update job opening: %v", err)
 	}
 
 	postedOnTime := job.PostedOn.AsTime()
 	applicationDeadlineTime := job.ApplicationDeadline.AsTime()
+	startingDateTime := job.StartingDate.AsTime()
 
 	return models.JobOpeningResponse{
 		ID:                  uint(job.Id),
 		Title:               job.Title,
 		Description:         job.Description,
+		Type:                jobDetails.Type,
 		Requirements:        job.Requirements,
 		PostedOn:            postedOnTime,
 		Location:            job.Location,
@@ -168,9 +189,13 @@ func (jc *jobClient) UpdateAJob(employerIDInt int32, jobID int32, jobDetails mod
 		ExperienceLevel:     job.ExperienceLevel,
 		EducationLevel:      job.EducationLevel,
 		ApplicationDeadline: applicationDeadlineTime,
-		EmployerID:          employerIDInt,
+		CompanyName:         job.CompanyName,
+		YearOfExperience:    job.YearOfExperience,
+		Opportunities:       job.Opportunities,
+		//CandidatesHired:     job.CandidatesHired,
+		StartingDate: startingDateTime,
+		EmployerID:   employerIDInt,
 	}, nil
-
 }
 
 func (jc *jobClient) JobSeekerGetAllJobs(keyword string) ([]models.JobSeekerGetAllJobs, error) {
@@ -199,11 +224,14 @@ func (jc *jobClient) GetJobDetails(jobID int32) (models.JobOpeningResponse, erro
 	}
 
 	applicationDeadlineTime := resp.ApplicationDeadline.AsTime()
+	startingDateTime := resp.StartingDate.AsTime()
+	postedOnTime := resp.PostedOn.AsTime()
 
 	return models.JobOpeningResponse{
 		ID:                  uint(jobID),
 		Title:               resp.Title,
 		Description:         resp.Description,
+		Type:                resp.Type,
 		Requirements:        resp.Requirements,
 		Location:            resp.Location,
 		EmploymentType:      resp.EmploymentType,
@@ -212,7 +240,13 @@ func (jc *jobClient) GetJobDetails(jobID int32) (models.JobOpeningResponse, erro
 		ExperienceLevel:     resp.ExperienceLevel,
 		EducationLevel:      resp.EducationLevel,
 		ApplicationDeadline: applicationDeadlineTime,
-		EmployerID:          resp.EmployerId,
+		CompanyName:         resp.CompanyName,
+		YearOfExperience:    resp.YearOfExperience,
+		Opportunities:       resp.Opportunities,
+		//CandidatesHired:     resp.CandidatesHired,
+		StartingDate: startingDateTime,
+		PostedOn:     postedOnTime,
+		EmployerID:   resp.EmployerId,
 	}, nil
 }
 

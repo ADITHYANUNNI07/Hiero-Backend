@@ -25,10 +25,11 @@ func (jr *jobRepository) PostJob(jobDetails models.JobOpening, employerID int32)
 
 	job := models.JobOpeningResponse{
 		Title:               jobDetails.Title,
+		Type:                jobDetails.Type,
 		Description:         jobDetails.Description,
 		Requirements:        jobDetails.Requirements,
 		PostedOn:            postedOn,
-		EmployerID:          int(employerID),
+		EmployerID:          employerID,
 		Location:            jobDetails.Location,
 		EmploymentType:      jobDetails.EmploymentType,
 		Salary:              jobDetails.Salary,
@@ -36,6 +37,11 @@ func (jr *jobRepository) PostJob(jobDetails models.JobOpening, employerID int32)
 		ExperienceLevel:     jobDetails.ExperienceLevel,
 		EducationLevel:      jobDetails.EducationLevel,
 		ApplicationDeadline: jobDetails.ApplicationDeadline,
+		CompanyName:         jobDetails.CompanyName,
+		YearOfExperience:    jobDetails.YearOfExperience,
+		Opportunities:       jobDetails.Opportunities,
+		CandidatesHired:     jobDetails.CandidatesHired,
+		StartingDate:        jobDetails.StartingDate,
 	}
 
 	if err := jr.DB.Create(&job).Error; err != nil {
@@ -122,7 +128,7 @@ func (jr *jobRepository) UpdateAJob(employerID int32, jobID int32, jobDetails mo
 		Description:         jobDetails.Description,
 		Requirements:        jobDetails.Requirements,
 		PostedOn:            postedOn,
-		EmployerID:          int(employerID),
+		EmployerID:          int32(employerID),
 		Location:            jobDetails.Location,
 		EmploymentType:      jobDetails.EmploymentType,
 		Salary:              jobDetails.Salary,
