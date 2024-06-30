@@ -21,7 +21,7 @@ type jobSeekerClient struct {
 // }
 
 func NewJobSeekerClient(cfg config.Config) interfaces.JobSeekerClient {
-	grpcConnection, err := grpc.Dial(cfg.HireoAuth, grpc.WithInsecure())
+	grpcConnection, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
 	if err != nil {
 		fmt.Println("Could not connect", err)
 	}

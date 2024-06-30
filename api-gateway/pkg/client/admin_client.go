@@ -17,7 +17,7 @@ type adminClient struct {
 
 func NewAdminClient(cfg config.Config) interfaces.AdminClient {
 
-	grpcConnection, err := grpc.Dial(cfg.HireoAuth, grpc.WithInsecure())
+	grpcConnection, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
 	if err != nil {
 		fmt.Println("Could not connect", err)
 	}

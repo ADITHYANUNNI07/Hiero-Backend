@@ -21,7 +21,7 @@ type jobClient struct {
 }
 
 func NewJobClient(cfg config.Config) interfaces.JobClient {
-	grpcConnection, err := grpc.Dial(cfg.HireoJob, grpc.WithInsecure())
+	grpcConnection, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		fmt.Println("Could not connect", err)
 	}
