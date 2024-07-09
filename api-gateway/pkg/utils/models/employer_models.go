@@ -15,6 +15,7 @@ type EmployerSignUp struct {
 	Contact_email        string `json:"contact_email"`
 	Contact_phone_number uint   `json:"contact_phone_number"`
 	Password             string `json:"password"`
+	Image                string	 `json:`
 }
 
 type EmployerDetailsResponse struct {
@@ -49,7 +50,6 @@ type TokenEmployer struct {
 	Employer EmployerDetailsResponse
 	Token    string
 }
-
 
 type EmployerDetails struct {
 	Company_name         string `json:"company_name"`
