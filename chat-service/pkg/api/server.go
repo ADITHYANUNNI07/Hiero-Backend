@@ -16,7 +16,7 @@ type Server struct {
 }
 
 func NewGRPCServer(cfg config.Config, server pb.ChatServiceServer) (*Server, error) {
-	lis, err := net.Listen("tcp", cfg.Port)
+	lis, err := net.Listen("tcp", ":50054")
 	if err != nil {
 		return nil, err
 	}

@@ -16,7 +16,7 @@ type Server struct {
 }
 
 func NewGRPCServer(cfg config.Config, adminServer pb.AdminServer, employerServer pb.EmployerServer, jobseekerServer pb.JobSeekerServer) (*Server, error) {
-	lis, err := net.Listen("tcp", cfg.Port)
+	lis, err := net.Listen("tcp",":50052")
 	if err != nil {
 		return nil, err
 	}

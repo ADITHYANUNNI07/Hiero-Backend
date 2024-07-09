@@ -10,7 +10,7 @@ import (
 )
 
 func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
-	psqlInfo := fmt.Sprintf("host=%s user=%s dbname=%s port=%s password=%s", "localhost", "postgres", "hireo_job", "5432", "12345")
+	psqlInfo := fmt.Sprintf("host=%s user=%s dbname=%s port=%s password=%s", "localhost", "postgres", "hireo_auth", "5432", "12345")
 	db, dbErr := gorm.Open(postgres.Open(psqlInfo), &gorm.Config{
 		SkipDefaultTransaction: true,
 	})
